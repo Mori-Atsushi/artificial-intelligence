@@ -1,7 +1,7 @@
 # -*- coding:utf-8 -*-
 import MeCab
 
-NUM = 10
+NUM = 100
 GROUP = 3
 
 class Article:
@@ -45,6 +45,7 @@ if __name__ == '__main__':
 		similar[i] = {}
 		for j in range(0, i):
 			similar[i][j] = article[i].calcSimilar(article[j])
+	print similar
 
 	while len(group) > GROUP:
 		mini = 1
@@ -54,15 +55,20 @@ if __name__ == '__main__':
 
 		for i in range(0, len(group)):
 			for j in range(0, i):
+				maxsample1 = group[i][0]
+				maxsample2 = group[j][0]
 				for sample1 in group[i]:
 					for sample2 in group[j]:
 						if sample1 < sample2:
 							sample1, sample2 = sample2, sample1
-						if similar[minsample1][minsample2] < similar[sample1][sample2]:
-							minsample1 = sample1
-							minsample2 = sample2
-							mini = i
-							minj = j
+						if similar[maxsample1][maxsample2] > similar[sample1][sample2]:
+							maxsample1 = sample1
+							maxsample2 = sample2
+				if similar[minsample1][minsample2] < similar[maxsample1][maxsample2]:
+					minsample1 = maxsample1
+					minsample2 = maxsample2
+					mini = i
+					minj = j
 		group[minj].extend(group[mini])
 		group.pop(mini)
 		print group
