@@ -4,15 +4,19 @@
 import MeCab
 
 NUM =  100	#記事数
-GROUP = 3	#分類数
+GROUP = 4	#分類数3
+NORMAL = False #正規化
 
 class Article:
 	"""記事クラス"""
 
 	def __init__(self, fileName):
 		self.words = {}
+		self.name = ''
 		mt = MeCab.Tagger('-Ochasen')
 		for line in open(fileName, 'r'):
+			if self.name == '':
+				self.name = line.strip()
 			mecabLine = mt.parse(line)
 			mecabWords = mecabLine.split('\n')
 			for mecabWord in mecabWords:
@@ -22,6 +26,14 @@ class Article:
 						self.words[mecabElems[2]] += 1
 					else:
 						self.words[mecabElems[2]] = 1
+		if NORMAL:
+			sum = 0
+			for word in self.words.values():
+				sum += word
+
+			for word in self.words.keys():
+				self.words[word] = float(self.words[word]) / sum
+
 		self.words = sorted(self.words.items())
 
 	def calcSimilar(self, comparison):
@@ -68,7 +80,7 @@ if __name__ == '__main__':
 							s1, s2 = sample2, sample1
 						else:
 							s1, s2 = sample1, sample2
-						if similar[maxsample1][maxsample2] > similar[s1][s2]:
+						if similar[maxsample1][maxsample2] < similar[s1][s2]:
 							maxsample1 = s1
 							maxsample2 = s2
 				if similar[minsample1][minsample2] < similar[maxsample1][maxsample2]:
@@ -80,10 +92,15 @@ if __name__ == '__main__':
 		history.append([minsample2, minsample1])
 		group[minj].extend(group[mini])
 		group.pop(mini)
-		print group
+
+	print '\n-------------------------------------------'
+	for sample in group:
+		for word in sample:
+			print '%02d | ' % word + article[word].name
+		print '-------------------------------------------'
 
 	#描画
-	print '\n-----------------------------------------------------------\n'
+	print '\n=============================================================================================\n'
 	dend = []
 	pos = NUM * [0]
 	count = 0
@@ -91,7 +108,7 @@ if __name__ == '__main__':
 	for i in range(0, len(group)):
 		for sample in group[i]:
 			dend.append(sample)
-			text.append('%2d --'% sample)
+			text.append('%02d --'% sample)
 			text.append('     ')
 			pos[sample] = count
 			count += 2
