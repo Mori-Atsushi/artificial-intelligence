@@ -1,4 +1,6 @@
 # -*- coding:utf-8 -*-
+#完全連結法 凝集型クラスタリング
+
 import MeCab
 
 NUM = 100
