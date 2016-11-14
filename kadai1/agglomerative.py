@@ -4,8 +4,9 @@
 import MeCab
 
 NUM =  100	#記事数
-GROUP = 4	#分類数3
-NORMAL = False #正規化
+GROUP = 3	#分類数3
+NORMAL = True #正規化
+PERFECT = True #単連結：False / 完全連結:True
 
 class Article:
 	"""記事クラス"""
@@ -80,7 +81,8 @@ if __name__ == '__main__':
 							s1, s2 = sample2, sample1
 						else:
 							s1, s2 = sample1, sample2
-						if similar[maxsample1][maxsample2] < similar[s1][s2]:
+
+						if (PERFECT and similar[maxsample1][maxsample2] > similar[s1][s2]) or (not PERFECT and similar[maxsample1][maxsample2] < similar[s1][s2]):
 							maxsample1 = s1
 							maxsample2 = s2
 				if similar[minsample1][minsample2] < similar[maxsample1][maxsample2]:
