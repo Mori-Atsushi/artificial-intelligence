@@ -1,10 +1,11 @@
 # -*- coding:utf-8 -*-
-#単連結法 凝集型クラスタリング
+#凝集型クラスタリング
+#dataフォルダ内の.txtファイルを解析する（ファイル名は00.txt〜99.txtとする)
 
 import MeCab
 
 NUM =  100	#記事数
-GROUP = 3	#分類数3
+GROUP = 3	#分類数
 NORMAL = True #正規化
 PERFECT = True #単連結：False / 完全連結:True
 
